@@ -1,0 +1,4 @@
+out/
+WPMailer.iml
+src/com/washpress/mail/Credentials.java
+.idea/
