@@ -3,6 +3,8 @@ package com.washpress.mail;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
+import org.json.JSONObject;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -31,19 +33,21 @@ public class WPMailer {
                 String senderEmail = rs.getString("sender_email");
                 String subject = rs.getString("subject");
                 String body = rs.getString("body");
+                System.out.println(messageID + " - " + recipientEmail);
 
                 HttpResponse<JsonNode> request = Unirest.post("https://api.mailgun.net/v3/" + _myDomain + "/messages")
                         .basicAuth("api", Credentials.getMailgunAPIKey())
-                        .queryString("from", senderEmail)
-                        .queryString("to", recipientEmail)
-                        .queryString("subject", subject)
-                        .queryString("html", body)
+                        .field("from", senderEmail)
+                        .field("to", recipientEmail)
+                        .field("subject", subject)
+                        .field("html", body)
                         .asJson();
 
                 if (request.getStatus() == 200) {
                    st = connect.createStatement();
                    st.executeUpdate("delete from email_queue where id=" + messageID);
                 }
+
             }
 
             connect.close();
