@@ -43,6 +43,7 @@ public class WPMailer {
                         .field("html", body)
                         .asJson();
 
+                // TODO Add error handling.
                 if (request.getStatus() == 200) {
                    st = connect.createStatement();
                    st.executeUpdate("delete from email_queue where id=" + messageID);
